@@ -1,9 +1,24 @@
-services:
-  - type: web
-    name: muslimbangla-api
-    runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
+name: Render Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.0'
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Deploy to Render
+        run: uvicorn main:app --host 0.0.0.0 --port $PORT
+        env:
+          PYTHON_VERSION: 3.11.0
